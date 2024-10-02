@@ -1,0 +1,25 @@
+.topic NoContext
+
+   Добро пожаловать
+
+   {One:One}
+   {Two:Two}
+   {Three:Three}
+
+.topic One
+
+  This is One
+
+  {Two:Two}
+
+.topic Two
+
+  This is Two
+
+  {Three:Three}
+
+.topic Three
+
+  This is Three
+
+  {One:One}

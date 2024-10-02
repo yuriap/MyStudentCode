@@ -1,0 +1,163 @@
+	DIMENSION AM(5,5),DELA(20),DELB(20),GAM1(20),GAM2(20),GAM3(20),
+     *  VM(5),FRA(5),XK(4,20),YK(4,20),XB(3,20),YB(3,20)
+	DIMENSION XBA(20,20),YBA(20,20),XBB(20,20),YBB(20,20),S1(4),
+     *  S2(3),S3(2),S4(3),OM1(4),UDA(2,20),UDB(2,20)
+	DATA AM/.95493,.31813,.19099,.13642,1.,-.95493,.95493,.31813,
+     *  .19099,1.,-.31813,-.95493,.95493,.31813,1.,-.19099,-.31813,
+     *  -.95493,.95493,1.,-.13642,-.19099,-.31813,-.95493,1./
+	DATA DELA/20*0./,DELB/20*0./,XBA/400*0./,XBB/400*0./,YBA/400*
+     *  0./,YBB/400*0./
+	DATA S1/-.5,-.166666,.166666,.5/,S2/-.33333,0.0,.33333/,
+     *  S3/-.66666,.66666/
+	PI=3.1415926
+	WRITE(*,*) 'Введите безразмерную частоту вращения и'
+	WRITE(*,*) 'шаг по времени'
+	READ(*,*) OM,TAY
+     C  БЛОК 2
+	DO 2 N=1,20
+	DO 1 N1=1,4
+	XK(N1,N)=S1(N1)*COS(N*OM*TAY)
+	YK(N1,N)=S1(N1)*SIN(N*OM*TAY)
+1	CONTINUE
+	DO 3 N2=1,3
+	XB(N2,N)=S2(N2)*COS(N*OM*TAY)
+	YB(N2,N)=S2(N2)*SIN(N*OM*TAY)
+3	CONTINUE
+	PP1=-2./3.
+	PP2=N*OM*TAY
+	XBA(N,N)=PP1*COS(PP2)
+	YBA(N,N)=PP1*SIN(PP2)
+	XBB(N,N)=-1.*XBA(N,N)
+	YBB(N,N)=-1.*YBA(N,N)
+     C  БЛОК 3
+	DO 100 IT=1,20
+	DO 5 I1=1,4
+	Z=1.
+	IF(XK(1,IT).GT.0.) Z=-1.
+	OM1(I1)=OM*S1(I1)*Z
+5	CONTINUE
+	CS=COS(OM*TAY*IT)
+	SN=SIN(OM*TAY*IT)
+	DO 6 I2=1,4
+	VX=0.
+	VY=0.
+	DO 7 I3=1,20
+	IF(DELA(I3).EQ.0.)GOTO 8
+	CALL SPE(DELA(I3),XK(I2,IT),XBA(I3,IT),YK(I2,IT),YBA(I3,IT),VX1,VY1)
+	VX=VX+VX1
+	VY=VY+VY1
+8	IF(DELB(I3).EQ.0.)GOTO 7
+	CALL SPE(DELB(I3),XK(I2,IT),XBB(I3,IT),YK(I2,IT),YBB(I3,IT),VX2,VY2)
+	VX=VX+VX2
+	VY=VY+VY2
+7	CONTINUE
+	FRA(I2)=OM1(I2)-CS-VX*CS-VY*SN
+6	CONTINUE
+	FRA(5)=0.
+     C  БЛОК 4
+	CALL GAUSS (AM,FRA,VM,5,IER)
+	IF(IER.NE.0)GOTO 9
+	DELA(IT)=VM(1)
+	GAM1(IT)=VM(2)
+	GAM2(IT)=VM(3)
+	GAM3(IT)=VM(4)
+	DELB(IT)=VM(5)
+	GOTO 10
+9	WRITE(*,*)'Циркуляции не определены на',IT,'шагу'
+	WRITE(*,*)'Конец вычислений'
+     C  БЛОК 5
+10	S4(1)=GAM1(IT)
+	S4(2)=GAM2(IT)
+	S4(3)=GAM3(IT)
+	DO 51 J1=1,20
+	UDA(1,J1)=0.
+	UDA(2,J1)=0.
+	UDB(1,J1)=0.
+	UDB(2,J1)=0.
+	DO 52 J2=1,20
+	IF(J1.EQ.J2) GOTO 52
+	IF(DELA(J2).EQ.0.) GOTO 521
+	CALL SPE(DELA(J2),XBA(J1,IT),XBA(J2,IT),YBA(J1,IT),YBA(J2,IT),D1,D2)
+	UDA(1,J1)=UDA(1,J1)+D1
+	UDA(2,J1)=UDA(2,J1)+D2
+521	IF(DELB(J2).EQ.0.) GOTO 52
+	CALL SPE(DELB(J2),XBB(J1,IT),XBB(J2,IT),YBB(J1,IT),YBB(J2,IT),D3,D4)
+	UDB(1,J1)=UDB(1,J1)+D3
+	UDB(2,J1)=UDB(2,J1)+D4
+52	CONTINUE
+	DO 53 J3=1,20
+	IF(DELB(J3).EQ.0.)GOTO 531
+	CALL SPE(DELB(J3),XBA(J1,IT),XBB(J3,IT),YBA(J1,IT),YBB(J3,IT),D5,D6)
+	UDA(1,J1)=UDA(1,J1)+D5
+	UDA(2,J1)=UDA(2,J1)+D6
+531	IF(DELA(J3).EQ.0.) GOTO 53
+	CALL SPE(DELA(J3),XBB(J1,IT),XBA(J3,IT),YBB(J1,IT),YBA(J3,IT),D7,D8)
+	UDB(1,J1)=UDB(1,J1)+D7
+	UDB(2,J1)=UDB(2,J1)+D8
+53	CONTINUE
+	DO 54 J4=1,3
+	CALL SPE(S4(J4),XBA(J1,IT),XB(J4,IT),YBA(J1,IT),YB(J4,IT),F1,F2)
+	CALL SPE(S4(J4),XBB(J1,IT),XB(J4,IT),YBB(J1,IT),YB(J4,IT),F3,F4)
+	UDA(1,J1)=UDA(1,J1)+F1
+	UDA(2,J1)=UDA(2,J1)+F2
+	UDB(1,J1)=UDB(1,J1)+F3
+	UDB(2,J1)=UDB(2,J1)+F4
+54	CONTINUE
+	UDA(2,J1)=UDA(2,J1)+1.
+	UDB(2,J1)=UDB(2,J1)+1.
+51	CONTINUE
+C	БЛОК 6
+	DO 61 L1=1,19
+	XBA(L1,IT+1)=XBA(L1,IT)+UDA(1,L1)*TAY
+	YBA(L1,IT+1)=YBA(L1,IT)+UDA(2,L1)*TAY
+	XBB(L1,IT+1)=XBB(L1,IT)+UDB(1,L1)*TAY
+	YBB(L1,IT+1)=YBB(L1,IT)+UDB(2,L1)*TAY
+61	CONTINUE
+100	CONTINUE
+C	БЛОК 7
+711	WRITE(*,*)'Вывод коорлинат свободных вихрей'
+	WRITE(*,*)'1 в течение одного шага'
+	WRITE(*,*)'2 пары вихрей за время их существования'
+	WRITE(*,*)'3 закончить работу'
+	READ(*,*) MM1
+	GOTO(71,72,721) MM1
+71	WRITE(*,*)'Введите номер шага'
+	READ(*,*) IST
+	WRITE(*,*) IST
+	U=IST*OM*TAY
+	U1=U*180./PI
+	U2=U1
+C	IF(U1.GE.360.)U2=AMOD(U1,360)
+	WRITE(*,*)'Текущий угол поворота',U2,'град'
+	WRITE(*,*)'Вихри, сошедшие с конца А'
+	DO 73 LL=1,IST
+	WRITE(*,70) LL,XBA(LL,IST),YBA(LL,IST)
+73	CONTINUE
+	WRITE(*,*)'Вихри сошедшие с конца В'
+	DO 74 LLL=1,IST
+	WRITE(*,70) LLL,XBB(LLL,IST),YBB(LLL,IST)
+74	CONTINUE
+	WRITE(*,*)'Продолжить текущий вывод 1'
+	WRITE(*,*)'Выйти в первое меню 2'
+	READ(*,*) MM2
+	GOTO(71,711) MM2
+72	WRITE(*,*)'Введите номер пары вихрей'
+	READ(*,*) NO
+	WRITE(*,*) NO
+	DO 75 KK=NO,20
+	UUU=KK*OM*TAY
+	UU1=UUU*180./PI
+	UU2=UU1
+C	IF(UU1.GE.360.) UU2=AMOD(UU1,360)
+	WRITE(*,701) KK,UU2,XBA(NO,KK),YBA(NO,KK),XBB(NO,KK),YBB(NO,KK)
+75	CONTINUE
+	WRITE(*,*)'Продолжить текущий вывод 1'
+	WRITE(*,*)'Выйти в первое меню 2'
+	READ(*,*) MM3
+	GOTO(72,711)MM3
+70	FORMAT(2X,'номер вихря',I3,'X=',G10.5,3X,'Y=',G10.5)
+701	FORMAT(2X,I2,1X,F8.4,1X,'XA=',G10.5,1X,'YA=',G10.5,1X,'XB=',G10
+     *	.5,1X,'YB=',G10.5)
+721	STOP
+	END
+			  		     	   	  	

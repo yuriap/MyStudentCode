@@ -1,0 +1,47 @@
+program TestBoun;
+uses TesBUnit,ProGraph,ProfDin,ProfComm,ProBound,Graph;
+begin
+Mem:=MemAvail;
+RegisterDinamic;
+ StartGraph;
+ MakeGraphRec(GRec);
+ G:=New(PGraphic,Init(GRec));
+{***************************************}
+  MS:=New(PMainSetka,Init(Norm,Tang));
+  CS:=New(PCompSetka,Init(Norm,Tang));
+  MakeBoundRec(BRec);
+  PutBoundaryValue(MS,CS,BRec);
+  BL:=New(PBoundLayer,Init(BRec));
+  BL^.InstallSetka(MS,CS);
+  BL^.Execute;
+  Dispose(BL,Done);
+{***************************************}
+ Buf:=MakeMainNorm(1);
+ PutBufParam(Buf,'1');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainNorm(Tang);
+ PutBufParam(Buf,'40');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainNorm(10);
+ PutBufParam(Buf,'10');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainNorm(30);
+ PutBufParam(Buf,'30');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainNorm(5);
+ PutBufParam(Buf,'5');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainNorm(35);
+ PutBufParam(Buf,'35');
+ G^.InsertBuffer(Buf);
+ Buf:=MakeMainGor(Norm);
+ PutBufParam(Buf,'W');
+ G^.InsertBuffer(Buf);
+ {*******************}
+ ViewBuffer;
+ Dispose(G,Done);
+ DoneGraph;
+ Dispose(MS,Done);
+ Dispose(CS,Done);
+Writeln('Баланс ',Mem,':',MemAvail);
+end.

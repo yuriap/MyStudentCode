@@ -1,0 +1,21 @@
+ Compiler Directives
+ ßßßßßßßßßßßßßßßßßßßßß
+
+Compiler directives, are comments with a special syntax, and can be used
+wherever comments are allowed.
+
+Compiler directives
+  - begin with {$ or (*$
+  - are followed by the name of the directive
+  - end with } or *)
+
+Compiler directives come in three varieties:
+  - Switch directives turn compiler features on or off when you specify
+    + or - after the directive name.
+  - Parameter directives specify parameters that affect the compilation.
+  - Conditional directives control conditional compilation of parts of the
+    source text.
+
+For a summary of compiler directives versus options in the Compiler Options
+dialog box, see the Directives and IDE Equivalents Help screen.
+

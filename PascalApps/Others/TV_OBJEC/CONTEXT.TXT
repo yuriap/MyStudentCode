@@ -1,0 +1,33 @@
+
+Constant    ณ Value ณ Meaning
+ออออออออออออุอออออออุออออออออ
+hcNew       ณ $FF01 ณ File|New
+hcOpen      ณ $FF02 ณ File|Open
+hcSave      ณ $FF03 ณ File|Save
+hcSaveAs    ณ $FF04 ณ File|Save As
+hcSaveAll   ณ $FF05 ณ File|Save All
+hcChangeDir ณ $FF06 ณ File|Change Dir
+hcDosShell  ณ $FF07 ณ File|DOS Shell
+hcExit      ณ $FF08 ณ File|Exit
+
+
+Constant ณ Value ณ Meaning
+อออออออออุอออออออุออออออออ
+hcUndo   ณ $FF10 ณ Edit|Undo
+hcCut    ณ $FF11 ณ Edit|Cut
+hcCopy   ณ $FF12 ณ Edit|Copy
+hcPaste  ณ $FF13 ณ Edit|Paste
+hcClear  ณ $FF14 ณ Edit|Clear
+
+
+Constant   ณ Value ณ Meaning
+อออออออออออุอออออออุออออออออ
+hcTile     ณ $FF20 ณ Window|Tile
+hcCascade  ณ $FF21 ณ Window|Cascade
+hcCloseAll ณ $FF22 ณ Window|Close All
+hcResize   ณ $FF23 ณ Window|Resize
+hcZoom     ณ $FF24 ณ Window|Zoom
+hcNext     ณ $FF25 ณ Window|Next
+hcPrev     ณ $FF26 ณ Window|Prev
+hcClose    ณ $FF27 ณ Window|Close
+
