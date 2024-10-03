@@ -1,16 +1,16 @@
-unit ProfDin;
+я╗┐unit ProfDin;
 interface
 uses Objects,ProfComm;
 type
     PMatrix = ^TMatrix;
     TMatrix = object(TObject)
-       P : pointer;{указатель на блок}
-       SegP : word;{сегмент блока}
-       OfsP : word;{смещение блока}
-       Size:byte;{размер переменной}
-       BeginV,EndV:Integer;{индексация по вертикали}
-       BeginH,EndH:integer;{индексация по горизонтали}
-       N,M  : word;{размерность матрицы}
+       P : pointer;{╤Г╨║╨░╨╖╨░╤В╨╡╨╗╤М ╨╜╨░ ╨▒╨╗╨╛╨║}
+       SegP : word;{╤Б╨╡╨│╨╝╨╡╨╜╤В ╨▒╨╗╨╛╨║╨░}
+       OfsP : word;{╤Б╨╝╨╡╤Й╨╡╨╜╨╕╨╡ ╨▒╨╗╨╛╨║╨░}
+       Size:byte;{╤А╨░╨╖╨╝╨╡╤А ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨╛╨╣}
+       BeginV,EndV:Integer;{╨╕╨╜╨┤╨╡╨║╤Б╨░╤Ж╨╕╤П ╨┐╨╛ ╨▓╨╡╤А╤В╨╕╨║╨░╨╗╨╕}
+       BeginH,EndH:integer;{╨╕╨╜╨┤╨╡╨║╤Б╨░╤Ж╨╕╤П ╨┐╨╛ ╨│╨╛╤А╨╕╨╖╨╛╨╜╤В╨░╨╗╨╕}
+       N,M  : word;{╤А╨░╨╖╨╝╨╡╤А╨╜╨╛╤Б╤В╤М ╨╝╨░╤В╤А╨╕╤Ж╤Л}
        constructor Init(V1,V2,H1,H2:integer);
        constructor Load(var S:TStream);
        procedure Store(var S:TStream);
@@ -20,12 +20,12 @@ type
        end;
     PVector = ^TVector;
     TVector = object(TObject)
-       P : pointer;{указатель на блок}
-       SegP : word;{сегмент блока}
-       OfsP : word;{смещение блока}
-       N  : word;{размерность вектора}
-       BeginH,EndH:integer;{индексация вектора}
-       Size:byte;{размер переменных}
+       P : pointer;{╤Г╨║╨░╨╖╨░╤В╨╡╨╗╤М ╨╜╨░ ╨▒╨╗╨╛╨║}
+       SegP : word;{╤Б╨╡╨│╨╝╨╡╨╜╤В ╨▒╨╗╨╛╨║╨░}
+       OfsP : word;{╤Б╨╝╨╡╤Й╨╡╨╜╨╕╨╡ ╨▒╨╗╨╛╨║╨░}
+       N  : word;{╤А╨░╨╖╨╝╨╡╤А╨╜╨╛╤Б╤В╤М ╨▓╨╡╨║╤В╨╛╤А╨░}
+       BeginH,EndH:integer;{╨╕╨╜╨┤╨╡╨║╤Б╨░╤Ж╨╕╤П ╨▓╨╡╨║╤В╨╛╤А╨░}
+       Size:byte;{╤А╨░╨╖╨╝╨╡╤А ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╤Л╤Е}
        constructor Init(H1,H2:integer);
        constructor Load(var S:TStream);
        procedure Store(var S:TStream);
@@ -40,7 +40,7 @@ type
        procedure Put(i:integer;NewElement:word);
        end;
 
-    {карта описания профиля}
+    {╨║╨░╤А╤В╨░ ╨╛╨┐╨╕╤Б╨░╨╜╨╕╤П ╨┐╤А╨╛╤Д╨╕╨╗╤П}
 const
     nmX = 1;
     nmY = 2;
@@ -122,7 +122,7 @@ type
        function Approx(X1,Y1,X2,Y2,X:real):real;
        end;
 {***************}
-{Вычисление интеграла методом трапеций}
+{╨Т╤Л╤З╨╕╤Б╨╗╨╡╨╜╨╕╨╡ ╨╕╨╜╤В╨╡╨│╤А╨░╨╗╨░ ╨╝╨╡╤В╨╛╨┤╨╛╨╝ ╤В╤А╨░╨┐╨╡╤Ж╨╕╨╣}
 function IntTrapecia(F:PBuffer):real;
 Const
    RVector : TStreamRec = (
@@ -346,7 +346,7 @@ end;
 function TMapProf.Search(Argument:real;StrNum:integer):integer;
 var i:integer;
 begin
-  For i:=BeginH to EndH-1 do begin{проверить с EndH-1. Было EndH}
+  For i:=BeginH to EndH-1 do begin{╨┐╤А╨╛╨▓╨╡╤А╨╕╤В╤М ╤Б EndH-1. ╨С╤Л╨╗╨╛ EndH}
    If (Get(StrNum,i) <= Argument)
       and
       (Get(StrNum,i+1) > Argument)Then
